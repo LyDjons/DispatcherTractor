@@ -65,15 +65,14 @@ public class DispControl implements Disp {
         //сортируем список по отделениям
        for(int i = 0;i<transportExcell.size();i++){
             transportExcell.get(i).setDepartment(transportExcell.get(i).getDepartment()+" ");
-           System.out.println(transportExcell.get(i).getDepartment());
         }
         Collections.sort(transportExcell, new Comparator<TransportExcell>() {
             @Override
             public int compare(TransportExcell o1, TransportExcell o2) {
                 if (o1.getPintersList() == null || o2.getPintersList() == null) return 0;
-                String s1 = o1.getDepartment().substring(o1.getDepartment().indexOf(" "), o1.getDepartment().length());
-                String s2 = o2.getDepartment().substring(o2.getDepartment().indexOf(" "), o2.getDepartment().length());
-                return s2.toString().compareTo(s1.toString());
+                String s1 = o1.getType_of_work();
+                String s2 = o2.getType_of_work();
+                return s1.toString().compareTo(s2.toString());
             }
         });
 
@@ -134,7 +133,8 @@ public class DispControl implements Disp {
             }catch(Exception e){ agregat = "-";}
 
             try{
-                inv_agregat = sheet.getRow(i).getCell(7).getStringCellValue();
+                inv_agregat = String.valueOf(sheet.getRow(i).getCell(7));
+                if(inv_agregat.equals("null")) inv_agregat = "-";
             }catch (Exception e){inv_agregat = "-";}
             try{
                 inv_agregat = inv_agregat.substring(0,inv_agregat.indexOf("."));

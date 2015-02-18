@@ -29,12 +29,14 @@ public class SaveExclell {
 
     //установка размеров колонок
     private  void setSizeColumn(Sheet sheet){
-        sheet.setColumnWidth(0,3766);
+        sheet.setColumnWidth(0,3700);
         sheet.setColumnWidth(1,6107);
         sheet.setColumnWidth(2,2925);
         sheet.setColumnWidth(3,6619);
-        sheet.setColumnWidth(4,5668);
-        for(int i = 5 ; i < 101;i++)
+        sheet.setColumnWidth(4,2500);
+        sheet.setColumnWidth(5,5668);
+        sheet.setColumnWidth(6,1700);
+        for(int i = 7 ; i < 103;i++)
             sheet.setColumnWidth(i,420);
     }
 
@@ -69,7 +71,7 @@ public class SaveExclell {
     public void createHatList() throws IOException {
 //установка размера колонок
         setSizeColumn(sheet);
-        sheet.createRow(1).createCell(0).setCellValue("Робота комбайнів");
+        sheet.createRow(1).createCell(0).setCellValue("Робота тракторів");
         XSSFCellStyle style = workbook.createCellStyle();
         style.setAlignment(CellStyle.ALIGN_CENTER); //выровняли по центру
         style.setFillForegroundColor(new XSSFColor(new Color(255,255,0))); //цвет ячейки
@@ -82,7 +84,7 @@ public class SaveExclell {
         Row cap_row = workbook.getSheet(sheet.getSheetName()).createRow(2);
         int count =7;
         XSSFCellStyle style2 = workbook.createCellStyle();
-        for(int i = 5; i < 101; i=i+4){
+        for(int i = 7; i < 103; i=i+4){
             if(count==25) count=1;
             cap_row.createCell(i).setCellValue(count++);
             region = new CellRangeAddress(2, 2, i, i+3);//(firstRow,lastRow,firstCol,lastCol)
@@ -99,10 +101,13 @@ public class SaveExclell {
         cap_row.createCell(0).setCellValue("Відділення");
         cap_row.createCell(1).setCellValue("Марка ТЗ");
         cap_row.createCell(2).setCellValue("Держ. №");
-        cap_row.createCell(3).setCellValue("Вид робіт");
-        cap_row.createCell(4).setCellValue("ПІБ");
-        for(int i=0;i<5;i++) sheet.getRow(2).getCell(i).setCellStyle(style2);
-        for(int i=0; i<6;i++){
+        cap_row.createCell(3).setCellValue("Агрегат");
+        cap_row.createCell(4).setCellValue("Инв. ном.");
+        cap_row.createCell(5).setCellValue("Вид робіт");
+        cap_row.createCell(6).setCellValue("К-ть Га");
+
+        for(int i=0;i<8;i++) sheet.getRow(2).getCell(i).setCellStyle(style2);
+        for(int i=0; i<8;i++){
             CellStyle cellStyle = sheet.getRow(2).getCell(i).getCellStyle();
             cellStyle.setBorderTop(CellStyle.BORDER_MEDIUM);
             cellStyle.setBorderLeft(CellStyle.BORDER_MEDIUM);
@@ -116,9 +121,15 @@ public class SaveExclell {
         try{
             int row1 =4;
             for(TransportExcell tr: transportlist){
+                int start = 7;
+                if(tr.getStart().getHours()>=7) {
+                    start = tr.get_num_cell(tr.getStart());
+                }
+                int end = tr.get_num_cell(tr.getEnd());
 
-                for(int i = tr.getFirstIndexWorkGreen(tr.getPintersList())-1;i<tr.getLastIndexWorkGreen(tr.getPintersList());i++){
-                    if(i>4) driwing_cell(row1, i,work);
+
+                for(int i = start; i<end;i++){
+                    driwing_cell(row1,i,new Color(0,176,80));
                 }
                 row1++;
             }
@@ -126,14 +137,16 @@ public class SaveExclell {
             for(TransportExcell tr: transportlist){
 
                 for(Pinter p:tr.getPintersList()){
-                    if(p.getColor().equals(stop)){
+
+                        if(p.getMin()>15){
                         for(int i =p.getStart();i<p.getEnd();i++){
                             driwing_cell(row1,i,p.getColor());
                         }
-                    }
+                        }
                 }
                 row1++;
             }
+
             //рисуем переезды
             row1=4;
             for(TransportExcell tr: transportlist){
@@ -148,6 +161,7 @@ public class SaveExclell {
                 }
                 row1++;
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -161,20 +175,20 @@ public class SaveExclell {
             sheet.createRow(row).createCell(1).setCellValue(tr.getTransport_mark());
             sheet.getRow(row).createCell(0).setCellValue(tr.getDepartment());
             sheet.getRow(row).createCell(2).setCellValue(tr.getGos());
-            sheet.getRow(row).createCell(3).setCellValue(tr.getType_of_work());
-            sheet.getRow(row).createCell(4).setCellValue(tr.getFio());
+            sheet.getRow(row).createCell(3).setCellValue(tr.getAgregat());
+            sheet.getRow(row).createCell(4).setCellValue(tr.getInv());
+            sheet.getRow(row).createCell(5).setCellValue(tr.getType_of_work());
             row++;
-
         }
 
         //создаем сетку
         for(int r = 3;r<transportlist.size()+4;r++){
-            for(int i = 0;i<101;i++){
+            for(int i = 0;i<103;i++){
             CellRangeAddress region = new CellRangeAddress(r, r, i, i);//(firstRow,lastRow,firstCol,lastCol)
                 RegionUtil.setBorderTop(CellStyle.BORDER_THIN, region, sheet, workbook);
                 RegionUtil.setBorderBottom(CellStyle.BORDER_THIN, region, sheet, workbook);
 
-                if (i<5){
+                if (i<7){
                 RegionUtil.setBorderRight(CellStyle.BORDER_THIN, region, sheet, workbook);
                     RegionUtil.setBorderLeft(CellStyle.BORDER_THIN, region, sheet, workbook);
                 }

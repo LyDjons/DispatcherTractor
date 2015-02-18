@@ -19,6 +19,9 @@ public class TransportExcell {
     private String fio;
     private Date start;
     private Date end;
+    private String inv;
+    private  String agregat;
+
     private ArrayList<Pinter> pintersList;
 
     public String getDepartment() {
@@ -85,6 +88,22 @@ if(configs==null) return "нет в config";
         this.fio = fio;
     }
 
+    public String getInv() {
+        return inv;
+    }
+
+    public void setInv(String inv) {
+        this.inv = inv;
+    }
+
+    public String getAgregat() {
+        return agregat;
+    }
+
+    public void setAgregat(String agregat) {
+        this.agregat = agregat;
+    }
+
     public Date getStart() {
         return (Date)start.clone();
     }
@@ -110,10 +129,12 @@ if(configs==null) return "нет в config";
     }
     public TransportExcell(Report report,ArrayList<Config>configs,Map<String,String> departMap) {
         tracker = report.getTracker();
-        department= get_list_departments_of_work(report,configs,departMap);
-        transport_mark = get_transport_mark(report.getTracker(),report.getTransport(),configs);
+        department= get_list_departments_of_work(report, configs, departMap);
+        transport_mark = get_transport_mark(report.getTracker(), report.getTransport(), configs);
         gos =getGos(report.getTracker(), configs);
-        type_of_work = get_type_of_work(report.getTracker(),configs);
+        type_of_work = get_type_of_work(report.getTracker(), configs);
+        inv = get_inv(report.getTracker(),configs);
+        agregat = get_agregat(report.getTracker(),configs);
         fio  = getDriver(report, configs);
         if(getStartWork(report)==null){
 
@@ -134,6 +155,20 @@ if(configs==null) return "нет в config";
         pintersList=getPainterListIntervalNumColumn(report.getTransportActions());
         if(gos.contains(".")) gos = gos .substring(0,gos.indexOf("."));
 
+    }
+    public static String get_inv(int tracker,ArrayList<Config>configs){
+        if(configs==null) return "";
+        for(Config c :configs){
+            if(Integer.valueOf(c.getTracker())==tracker) return c.getNum_agreg();
+        }
+        return "";
+    }
+    public static String get_agregat(int tracker,ArrayList<Config>configs){
+        if(configs==null) return "";
+        for(Config c :configs){
+            if(Integer.valueOf(c.getTracker())==tracker) return c.getAgregat();
+        }
+        return "";
     }
     public static String get_transport_mark(int tracker,String transpory_marck,ArrayList<Config>configs){
        if(configs==null) return transpory_marck;
@@ -214,62 +249,36 @@ if(configs==null) return "нет в config";
     }
     public ArrayList<Pinter> getPainterListIntervalNumColumn(ArrayList<TransportAction> action){
         ArrayList<Pinter> painterarray = new ArrayList<Pinter>();
+    int startday = action.get(0).getStart().getDay();
 
         for(TransportAction transportAction:action){
+            if(transportAction.getStatus().contains("Движение")){
+             if(transportAction.getMiddle_speed()>12){
+                 int start =get_num_cell(transportAction.getStart());
+                 int end = get_num_cell(transportAction.getEnd());
+                 int sec = 0;
+                 if(transportAction.getInterval().getSeconds()>29) sec =1;
+                 int minutes = transportAction.getInterval().getHours()*60+transportAction.getInterval().getMinutes()+sec;
+                 painterarray.add(new Pinter(start,end,new Color(0,176,240),"dislocation",minutes));
+             }
+                continue;
+            }
 
-            if(transportAction.getStart().getHours()<7) continue;
-if(transportAction.getStatus().contains("Стоянка") && transportAction.getInterval().getMinutes()<15 &&
-transportAction.getInterval().getHours()<0) continue;
+            if(transportAction.getStart().getHours()<7 && transportAction.getStart().getDay()==startday) continue;
 
             int start =get_num_cell(transportAction.getStart());
             int end = get_num_cell(transportAction.getEnd());
-            if(start==end) continue;
-            if(transportAction.getStatus().contains("Стоянка") && (transportAction.getInterval().getHours()>0 ||
-            transportAction.getInterval().getMinutes()>14)){
-                painterarray.add(new Pinter(start,end,new Color(255,255,0)));
-            }
-            if(transportAction.getMiddle_speed()>14 && transportAction.getStatus().contains("Движение")){
-                painterarray.add(new Pinter(start,end,new Color(0,176,240)));
-            }
-            if(transportAction.getStatus().contains("Движение") && transportAction.getMiddle_speed()<14){
-                painterarray.add(new Pinter(start,end,new Color(0,176,80)));
+            //if(start==end) continue;
+            if(transportAction.getStatus().contains("Стоянка") && (transportAction.getInterval().getHours()>=0 ||
+                    transportAction.getInterval().getMinutes()>0)){
+                int sec = 0;
+                if(transportAction.getInterval().getSeconds()>29) sec =1;
+                int minutes = transportAction.getInterval().getHours()*60+transportAction.getInterval().getMinutes()+sec;
+                painterarray.add(new Pinter(start,end,new Color(255,255,0),transportAction.getPlace(),minutes));
             }
         }
 
-        //deleted start yellow
-        for(Pinter p : painterarray){
-            if(p.getColor().equals(new Color(255,255,0)))
-                p.setColor(new Color(255,255,255));
-            else
-            if(p.getColor().equals(new Color(0,176,80))){
-                break;
-            }
-        }
-        //deleted end Yellow
-        for(int i = painterarray.size()-1; i >-1;i--){
-            if(painterarray.get(i).getColor().equals(new Color(255,255,0))){
-                painterarray.get(i).setColor(new Color(255,255,255));
-            }
-            if(painterarray.get(i).getColor().equals(new Color(0,176,80))){
-                break;
-            }
-        }
         return painterarray;
-    }
-
-    public int getFirstIndexWorkGreen(ArrayList<Pinter> list){
-        for(Pinter p : list){
-            if(p.getColor().equals(new Color(0,176,80))) return p.getStart();
-        }
-        return 5;
-    }
-
-    public int getLastIndexWorkGreen(ArrayList<Pinter> list){
-        int index =5;
-        for(Pinter p : list){
-            if(p.getColor().equals(new Color(0,176,80))) index=p.getEnd();
-        }
-        return index;
     }
 
     //округление даты (времени) до 15 мин
@@ -300,14 +309,14 @@ transportAction.getInterval().getHours()<0) continue;
         return (Date)date.clone();
     }
 
-    private static int  get_num_cell(Date date){
+    public static int  get_num_cell(Date date){
         date = (Date)data_rounding(date).clone();
         Date countdata = new Date();
         countdata.setHours(7);
         countdata.setMinutes(0);
         countdata.setSeconds(0);
-        int cell=5;
-        for(int i =0;i<101;i++){
+        int cell=7;
+        for(int i =0;i<103;i++){
             if(date.getHours()==countdata.getHours()&& date.getMinutes()==countdata.getMinutes()) {
                 return cell;
             } countdata.setMinutes(countdata.getMinutes()+15);
@@ -323,14 +332,16 @@ transportAction.getInterval().getHours()<0) continue;
     @Override
     public String toString() {
         return "TransportExcell{" +
-                "department='" + department + '\'' +
-                ", transport_mark='" + transport_mark + '\'' +
-                ", gos='" + gos + '\'' +
-                ", type_of_work='" + type_of_work + '\'' +
-                ", fio='" + fio + '\'' +
-                ", start=" + start +
+                "agregat='" + agregat + '\'' +
+                ", inv='" + inv + '\'' +
                 ", end=" + end +
+                ", start=" + start +
+                ", fio='" + fio + '\'' +
+                ", type_of_work='" + type_of_work + '\'' +
+                ", gos='" + gos + '\'' +
+                ", transport_mark='" + transport_mark + '\'' +
+                ", department='" + department + '\'' +
+                ", tracker=" + tracker +
                 '}';
     }
-
 }

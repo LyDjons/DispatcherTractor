@@ -51,7 +51,7 @@ public class MenuDemo {
         menuBar.add(menuInfo);
 
         //a group of JMenuItems
-        loadItem = new JMenuItem("Загрузить ДУТ");
+        loadItem = new JMenuItem("Загрузить ДУТ с тракторами");
         saveMenu = new JMenu("Создать отчет");
         saveItemPath = new JMenuItem("В существующий файл");
         saveItemNew = new JMenuItem("В новый файл");
@@ -68,7 +68,7 @@ public class MenuDemo {
                 String multiLineMsg[] = { "1.  Выгрузить ДУТ с программы TrackControl v 1.47. В дут должны "+newline+
                         "входить только те треккера, которые необходимы для отчета."+newline+
                         "2.  Настроить файл конфигурации \"Настройки/Файл конфигурации\". "+newline+
-                        "Для комбайнов и бункеров использовать лист \"combaine\"    "+newline+
+                        "Для тракторов использовать лист \"tractor\", \"depart\"    "+newline+
                         "3.  Загрузить ДУТ в программу с помощью команды \"Файл/Загрузить ДУТ\" "+newline+
                         "4.  Создать отчет с помощью команды \"Файл/Создать отчет\". "+newline+
                         "Отчет можно выгрузить как в существующий файл, так и в новый,"+newline+
@@ -88,7 +88,7 @@ public class MenuDemo {
                         "с колеггами вчерашними приключениями, или  же  вздремнуть полчасика "+newline+
                         "лиццом на клавиатуре. Но важность сдачи отчетов не дает расслабится. "+newline+
                         "По  этому спецом для Вас  и  была  создана  эта  чудо-программулина, "+newline+
-                        "способна сократить рабочий процесс, создавая качествынные отчеты."
+                        "способна сократить рабочий процесс, создавая \"качествынные\" отчеты."
 
                         , "" } ;
                 JOptionPane.showMessageDialog(parent,
@@ -147,8 +147,8 @@ public class MenuDemo {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-               // final String path_load=getPathToFile("Загрузить");
-                final String path_load="Document.xlsx";
+                final String path_load=getPathToFile("Загрузить");
+
                 if(path_load==null) return;
 
                 Thread thread = new Thread(){
@@ -319,7 +319,7 @@ public class MenuDemo {
         frame.setAlwaysOnTop(true);
 
         frame.setVisible(true);
-        output.append("Готов загрузить ДУТ для комбайнов"+"\n");
+        output.append("Готов загрузить ДУТ для ракторов"+"\n");
     }
 
     public static void main(String[] args) {
