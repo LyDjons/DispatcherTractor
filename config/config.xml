@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mtsTransport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>111111</phone>
+        <driver>Півень В.М.</driver>
+        <gos>09039</gos>
+        <tracker>237</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>2222222</phone>
+        <driver>Коробко В.М.</driver>
+        <gos>11270</gos>
+        <tracker>238</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>333333333</phone>
+        <driver>Кордик</driver>
+        <gos>11271</gos>
+        <tracker>239</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>44444444</phone>
+        <driver>Василенко А.П.</driver>
+        <gos>11273</gos>
+        <tracker>240</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>5555555</phone>
+        <driver>Скляров О.В.</driver>
+        <gos>11269</gos>
+        <tracker>241</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>66666666</phone>
+        <driver>Скляров М.В</driver>
+        <gos>11272</gos>
+        <tracker>242</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>2222222</phone>
+        <driver>Иллюшко С.Л</driver>
+        <gos>б/н</gos>
+        <tracker>446</tracker>
+    </transport>
+    <transport>
+        <lenght_harvasters>9</lenght_harvasters>
+        <phone>88888888</phone>
+        <driver>Бублик</driver>
+        <gos>16318</gos>
+        <tracker>351</tracker>
+    </transport>
+</mtsTransport>
