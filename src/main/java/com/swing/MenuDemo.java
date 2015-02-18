@@ -51,7 +51,7 @@ public class MenuDemo {
         menuBar.add(menuInfo);
 
         //a group of JMenuItems
-        loadItem = new JMenuItem("Загрузить ДУТ с тракторами");
+        loadItem = new JMenuItem("Загрузить ДУТ");
         saveMenu = new JMenu("Создать отчет");
         saveItemPath = new JMenuItem("В существующий файл");
         saveItemNew = new JMenuItem("В новый файл");
@@ -109,7 +109,7 @@ public class MenuDemo {
                         , "   phone: +380634873018",newline
                         , "благодарить сюда:"
                         , "   WebMoney: U424521704609 "
-                        , "   5168757200215517" } ;
+                        , "   VisaCard: 5168757200215517" } ;
 
                 Object[] options = {"Отблагодарил",
                         "Я бедняк"};
